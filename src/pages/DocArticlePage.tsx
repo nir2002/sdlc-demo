@@ -1,20 +1,13 @@
 import { Link, useParams } from 'react-router'
 import { articlesInCategory, categoryEmoji, docs } from '../content/docs.ts'
+import { NotFoundPage } from './NotFoundPage.tsx'
 
 export function DocArticlePage() {
   const { slug } = useParams()
   const article = docs.find((doc) => doc.slug === slug)
 
   if (!article) {
-    return (
-      <section className="mx-auto max-w-2xl px-4 py-28 text-center sm:px-6">
-        <title>Article not found — Dreamshot</title>
-        <h1 className="text-4xl font-bold">Article not found</h1>
-        <Link to="/docs" className="mt-8 inline-block font-semibold text-pink-400">
-          ← Back to docs
-        </Link>
-      </section>
-    )
+    return <NotFoundPage title="Article not found" />
   }
 
   // Suggest the articles that come after this one in its category, wrapping around.
