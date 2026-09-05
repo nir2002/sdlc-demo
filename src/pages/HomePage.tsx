@@ -2,17 +2,18 @@ import { Link } from 'react-router'
 
 type Shot = {
   prompt: string
-  emoji: string
+  image: string
   gradient: string
 }
 
+// Static samples so the homepage never waits on the image API.
 const shots: Shot[] = [
-  { prompt: 'A corgi astronaut eating ramen on the moon', emoji: '🐶', gradient: 'from-indigo-500 via-purple-500 to-pink-500' },
-  { prompt: 'Tiny dragon asleep in a teacup', emoji: '🐉', gradient: 'from-emerald-400 via-teal-500 to-cyan-600' },
-  { prompt: 'Neon Tokyo street in the rain, synthwave', emoji: '🌃', gradient: 'from-fuchsia-600 via-violet-600 to-blue-600' },
-  { prompt: 'A cat DJ at a sunset beach party', emoji: '🐱', gradient: 'from-orange-400 via-rose-500 to-fuchsia-600' },
-  { prompt: 'Cozy cabin inside a snow globe', emoji: '🏔️', gradient: 'from-sky-300 via-blue-500 to-indigo-700' },
-  { prompt: 'A pizza planet with pepperoni moons', emoji: '🍕', gradient: 'from-yellow-300 via-orange-500 to-red-600' },
+  { prompt: 'A corgi astronaut eating ramen on the moon', image: '/gallery/corgi-astronaut.jpg', gradient: 'from-indigo-500 via-purple-500 to-pink-500' },
+  { prompt: 'Tiny dragon asleep in a teacup', image: '/gallery/teacup-dragon.jpg', gradient: 'from-emerald-400 via-teal-500 to-cyan-600' },
+  { prompt: 'Neon Tokyo street in the rain, synthwave', image: '/gallery/neon-tokyo.jpg', gradient: 'from-fuchsia-600 via-violet-600 to-blue-600' },
+  { prompt: 'A cat DJ at a sunset beach party', image: '/gallery/cat-dj.jpg', gradient: 'from-orange-400 via-rose-500 to-fuchsia-600' },
+  { prompt: 'Cozy cabin inside a snow globe', image: '/gallery/snow-globe-cabin.jpg', gradient: 'from-sky-300 via-blue-500 to-indigo-700' },
+  { prompt: 'A pizza planet with pepperoni moons', image: '/gallery/pizza-planet.jpg', gradient: 'from-yellow-300 via-orange-500 to-red-600' },
 ]
 
 export function HomePage() {
@@ -40,7 +41,7 @@ export function HomePage() {
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
-              to="/pricing"
+              to="/create"
               className="rounded-full bg-gradient-to-r from-fuchsia-500 to-orange-400 px-6 py-3 font-semibold text-white shadow-lg shadow-fuchsia-500/30 hover:brightness-110"
             >
               Start creating, it's free
@@ -57,21 +58,27 @@ export function HomePage() {
 
       <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
         <h2 className="text-center text-sm font-medium text-zinc-500">
-          Made with Dreamshot this week
+          Made with Dreamshot this week. Tap one to try the prompt.
         </h2>
         <ul className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-3">
           {shots.map((shot) => (
-            <li
-              key={shot.prompt}
-              className={`relative aspect-square overflow-hidden rounded-3xl bg-gradient-to-br ${shot.gradient} transition-transform duration-300 hover:scale-[1.02] motion-reduce:transition-none`}
-            >
-              <div aria-hidden="true" className="absolute top-6 left-6 size-24 rounded-full bg-white/25 blur-2xl" />
-              <span aria-hidden="true" className="absolute inset-0 grid place-items-center text-6xl sm:text-8xl">
-                {shot.emoji}
-              </span>
-              <p className="absolute inset-x-3 bottom-3 rounded-2xl bg-black/40 px-3 py-2 text-xs text-white backdrop-blur-md sm:text-sm">
-                “{shot.prompt}”
-              </p>
+            <li key={shot.prompt}>
+              <Link
+                to="/create"
+                state={{ prompt: shot.prompt }}
+                className={`group relative block aspect-square overflow-hidden rounded-3xl bg-gradient-to-br ${shot.gradient}`}
+              >
+                <img
+                  src={shot.image}
+                  alt={shot.prompt}
+                  loading="lazy"
+                  className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
+                />
+                <p className="absolute inset-x-3 bottom-3 rounded-2xl bg-black/50 px-3 py-2 text-xs text-white backdrop-blur-md sm:text-sm">
+                  “{shot.prompt}”
+                  <span className="hidden font-semibold text-pink-300 group-hover:inline"> Try it →</span>
+                </p>
+              </Link>
             </li>
           ))}
         </ul>

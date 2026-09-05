@@ -28,7 +28,7 @@ export function Header() {
         </nav>
 
         <Link
-          to="/pricing"
+          to="/create"
           className="hidden rounded-full bg-gradient-to-r from-fuchsia-500 to-orange-400 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/20 hover:brightness-110 md:block"
         >
           Start creating
