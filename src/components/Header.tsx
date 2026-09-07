@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router'
 import { Logo } from './Logo.tsx'
+import { MobileNav } from './MobileNav.tsx'
 import { navItems } from './navigation.ts'
 
 export function Header() {
@@ -33,6 +34,8 @@ export function Header() {
         >
           Start creating
         </Link>
+
+        <MobileNav />
       </div>
     </header>
   )

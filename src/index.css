@@ -20,6 +20,12 @@
   ::selection {
     @apply bg-fuchsia-500/40 text-white;
   }
+
+  /* Set by useScrollLock while an overlay such as the mobile nav is open. */
+  html[data-scroll-locked] {
+    overflow: hidden;
+    padding-right: var(--scrollbar-width, 0px);
+  }
 }
 
 @utility text-gradient {
