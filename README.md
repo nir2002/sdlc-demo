@@ -1,32 +1,36 @@
-# React + TypeScript + Vite
+# Dreamshot
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Type a thought. Get a picture. ✨
 
-Currently, two official plugins are available:
+Dreamshot is an AI image generator built with Vite, React, TypeScript,
+Tailwind CSS and React Router. Images come from the OpenAI Images API.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run it
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+npm install
+cp .env.example .env.local   # then paste your OpenAI key into .env.local
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Open http://localhost:5173/create and describe something weird.
+
+The OpenAI key is only read by the Vite dev server (`server/imageApi.ts`),
+which exposes `POST /api/generate`. It is never sent to the browser.
+Generation works under `npm run dev` and `npm run preview`.
+
+## Scripts
+
+- `npm run dev`: start the dev server
+- `npm run build`: type-check and build to `dist/`
+- `npm run preview`: serve the production build (API included)
+- `npm run lint`: lint with oxlint
+
+## Where things live
+
+- `server/imageApi.ts`: the `/api/generate` endpoint
+- `src/pages/`: one component per route
+- `src/components/`: layout, header, footer, mobile nav and result tiles
+- `src/lib/`: image generation client and saved creations
+- `src/content/docs.ts`: docs articles as typed data
+- `src/hooks/`: focus trap and scroll lock
