@@ -1,12 +1,14 @@
-import { useState, type FormEvent, type KeyboardEvent } from 'react'
+import { useEffect, useState, type FormEvent, type KeyboardEvent } from 'react'
 import { useLocation } from 'react-router'
 import { PageIntro } from '../components/PageIntro.tsx'
 import { PaintingPlaceholder, ResultImage } from '../components/ResultImage.tsx'
+import { loadCreations, MAX_CREATIONS, saveCreations, type Creation } from '../lib/creations.ts'
 import {
   aspects,
   generateImages,
   styles,
   surprisePrompts,
+  thumbnailOf,
   type AspectId,
   type StyleId,
 } from '../lib/imageGen.ts'
@@ -30,6 +32,9 @@ export function CreatePage() {
   const [pending, setPending] = useState<Run | null>(null)
   const [result, setResult] = useState<Run | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [creations, setCreations] = useState<Creation[]>(loadCreations)
+
+  useEffect(() => saveCreations(creations), [creations])
 
   const trimmed = prompt.trim()
 
@@ -43,6 +48,15 @@ export function CreatePage() {
     try {
       const images = await generateImages({ prompt: trimmed, styleId, aspect, count: BATCH_SIZE })
       setResult({ ...run, images })
+
+      const thumbnails = await Promise.all(images.map((image) => thumbnailOf(image)))
+      const created = thumbnails.map((thumbnail) => ({
+        id: crypto.randomUUID(),
+        prompt: trimmed,
+        thumbnail,
+        createdAt: Date.now(),
+      }))
+      setCreations((prev) => [...created, ...prev].slice(0, MAX_CREATIONS))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.')
     } finally {
@@ -164,6 +178,39 @@ export function CreatePage() {
                       <ResultImage src={image} prompt={result.prompt} aspectClass={aspects[result.aspect].className} />
                     </li>
                   ))}
+            </ul>
+          </section>
+        )}
+
+        {creations.length > 0 && (
+          <section aria-labelledby="creations-heading" className="mt-20">
+            <div className="flex items-center justify-between">
+              <h2 id="creations-heading" className="text-2xl font-semibold">
+                Your creations
+              </h2>
+              <button type="button" onClick={() => setCreations([])} className="text-sm text-zinc-400 hover:text-white">
+                Clear all
+              </button>
+            </div>
+            <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {creations.map((creation) => (
+                <li key={creation.id}>
+                  <button
+                    type="button"
+                    title="Use this prompt"
+                    onClick={() => {
+                      setPrompt(creation.prompt)
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }}
+                    className="group relative block aspect-square w-full overflow-hidden rounded-2xl bg-white/5"
+                  >
+                    <img src={creation.thumbnail} alt={creation.prompt} className="size-full object-cover" />
+                    <span className="absolute inset-x-2 bottom-2 line-clamp-2 rounded-xl bg-black/60 px-2 py-1 text-left text-xs text-white opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                      {creation.prompt}
+                    </span>
+                  </button>
+                </li>
+              ))}
             </ul>
           </section>
         )}

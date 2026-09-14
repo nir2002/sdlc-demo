@@ -54,6 +54,24 @@ export async function generateImages({ prompt, styleId, aspect, count }: Generat
 }
 
 /** A small square JPEG of the image, small enough to keep in localStorage. */
+export function thumbnailOf(src: string, size = 320): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = size
+      canvas.height = size
+      const side = Math.min(img.naturalWidth, img.naturalHeight)
+      canvas
+        .getContext('2d')
+        ?.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, size, size)
+      resolve(canvas.toDataURL('image/jpeg', 0.8))
+    }
+    img.onerror = reject
+    img.src = src
+  })
+}
+
 export function downloadImage(src: string, prompt: string) {
   const slug = prompt.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40)
   const link = document.createElement('a')
