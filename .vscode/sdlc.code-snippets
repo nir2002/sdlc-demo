@@ -1,0 +1,47 @@
+{
+  "sdlc1a": {
+    "scope": "shellscript,typescriptreact",
+    "prefix": "sdlc1a",
+    "body": [
+      "git log --oneline --stat -1 2d7b66b"
+    ],
+    "description": "Show the prompt history panel commit and the files it touched"
+  },
+  "sdlc1b": {
+    "scope": "shellscript,typescriptreact",
+    "prefix": "sdlc1b",
+    "body": [
+      "ls -d */"
+    ],
+    "description": "List top-level directories"
+  },
+  "sdlc2a": {
+    "scope": "shellscript,typescriptreact",
+    "prefix": "sdlc2a",
+    "body": [
+      "ls -d */"
+    ],
+    "description": "Print the repo root listing"
+  },
+  "sdlc2b": {
+    "scope": "shellscript,typescriptreact",
+    "prefix": "sdlc2b",
+    "body": [
+      "Create a skill at .claude/skills/intent-template/SKILL.md.",
+      "",
+      "Its job: turn a conversation about a problem or an idea into an intent file. The description must make it load whenever someone asks to capture, save, or write up an idea, request or problem as a file.",
+      "",
+      "The file it produces has exactly these sections, in English, under half a page:",
+      "Problem — in the words of the person who raised it, not rephrased into product language",
+      "Desired outcome",
+      "Affected users and systems",
+      "Constraints",
+      "Open questions — anything the requester is unsure about, verbatim",
+      "",
+      "Rules it must enforce: ask clarifying questions before writing, never invent decisions, and put anything assumed under Open questions. Save to intent/<slug>.md.",
+      "",
+      "Then commit it."
+    ],
+    "description": "Claude Code prompt: create the intent-template skill"
+  }
+}
